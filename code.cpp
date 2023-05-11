@@ -1,4 +1,3 @@
-/*Test*/
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -129,7 +128,7 @@ void readindata(){
         file.close();
         
     }
-    vector<string> headerRec2 = {"VoterID", "Name", "Age", "Suburb", "Status"};
+    vector<string> headerRec2 = {"VoterID", "Name", "PIN",  "Age", "Suburb", "Status", "IsAdmin"};
     voterdatabase.push_back(headerRec2);
     fstream file2(voterdir);
     if (file2.is_open()){
@@ -142,10 +141,10 @@ void readindata(){
            if (file2.eof()){
             cout << "end of file, breaking" << endl;
            }
-           for (int i = 0; i < 5; i++)
+           for (int i = 0; i < 7; i++)
            {
             string element;
-            if (i == 4){
+            if (i == 6){
                 getline(file2, element, '\n');
             } else {
                 getline(file2, element, ',');
@@ -195,8 +194,9 @@ void newentry(){
     add_to_database(record);
 }
 
-void menuoptions(){
-    int menuoption = 1;
+void menuoptionsvoter(){
+    int menuoption;
+    // Menuoptions for Voters
     while (menu){
         cout << "Enter Menu Option: " << endl;
         cin >> menuoption;
@@ -222,10 +222,39 @@ void menuoptions(){
     
 }
 
+void menuoptionsadmin(){
+    int menuoption;
+    // Menuoptions for admins
+    while (menu){
+        cout << "Enter Menu Option: " << endl;
+        cin >> menuoption;
+        switch (menuoption)
+        {
+        case 1:
+            newentry();
+            break;
+        case 2:
+            newentry();
+            break;
+        case 3:
+            printdata();
+            break;
+        case 4:
+            printdata();
+            break;
+        default:
+            cout << "Invalid Menu option" << endl;
+            break;
+        }
+    }
+    
+}
+
+
 int main(){
     readindata();
     //cout << "printing data";
     //printdata();
-    menuoptions();
+    menuoptionsvoter();
     return 0;
 }
