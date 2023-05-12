@@ -10,7 +10,6 @@ string canddir = "candiates.txt";
 string voterdir = "voters.txt";
 vector<vector<string>> candidatedatabase(0, vector<string>(5));
 vector<vector<string>> voterdatabase(0, vector<string>(5));
-bool menu = true;
 
 void printdata() {
             cout << "Printing : " << candidatedatabase.size() << " records" << endl;
@@ -166,6 +165,17 @@ void readindata(){
         
     }
 }
+int searchDB(string Searchstring,vector<vector<string>> database , int Searchposition){
+    int i;
+    for (i = 0; i < database.size(); i++)
+    {
+        if (database[i][Searchposition] == Searchstring){
+            return i;
+        }
+    }
+    
+    return i = -1;
+}
 
 void add_to_database(string record[5]){
     vector<string> vecRecord(record, record + 5);
@@ -197,7 +207,7 @@ void newentry(){
 void menuoptionsvoter(){
     int menuoption;
     // Menuoptions for Voters
-    while (menu){
+    while (true){
         cout << "Enter Menu Option: " << endl;
         cin >> menuoption;
         switch (menuoption)
@@ -225,7 +235,7 @@ void menuoptionsvoter(){
 void menuoptionsadmin(){
     int menuoption;
     // Menuoptions for admins
-    while (menu){
+    while (true){
         cout << "Enter Menu Option: " << endl;
         cin >> menuoption;
         switch (menuoption)
@@ -250,11 +260,63 @@ void menuoptionsadmin(){
     
 }
 
-
+int login(){
+    string IDstring;
+    int index = -1;
+    int attempts = 0;
+    bool loggedin = false;
+    while (loggedin == false){
+        if (attempts > 3){
+            return -1;
+        }
+        cout << "Please Enter ID: ";
+        getline(cin, IDstring);
+        index = searchDB(IDstring,voterdatabase , 0);
+        if (index == !-1){
+            string PIN;
+            cout << "Please enter PIN: ";
+            getline(cin , PIN);
+            if (voterdatabase[index][2] == PIN){
+                loggedin = true;
+                break;
+            } else {
+                cout << "Incorrect Password, try again" << endl;
+                attempts++;
+            }
+        } else {
+            cout << "That VoterID does not exist, try again" << endl;
+            attempts++;
+        }
+    }
+    if (loggedin == true){
+        return index;
+    }
+    
+    
+}
+void menu(bool Admin){
+    if (Admin){
+        menuoptionsadmin();
+    } else {
+        menuoptionsvoter();
+    }
+}
 int main(){
     readindata();
+    int number = login();
+    bool isAdmin = false;
+    if (number == -1){
+        cout << "Login failed";
+        return 0;
+    } else {
+        if (voterdatabase[number][6] == "yes"){
+            isAdmin = true;
+        }
+        menu(isAdmin);
+    }
     //cout << "printing data";
     //printdata();
+
     menuoptionsvoter();
     return 0;
 }
