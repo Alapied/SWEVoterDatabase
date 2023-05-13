@@ -1,17 +1,17 @@
-Symbol,Name,Age,Suburb,Count
-Penguine,John Smith,25,Glenferrie,0
-Kangaroo,Emily Jones,30,Glenferrie,0
-Koala,Mark Davis,35,Glenferrie,0
-Dolphin,Samantha Lee,40,Glenferrie,0
-Penguine,David Brown,27,Hawthorn,0
-Kangaroo,Julia Taylor,32,Hawthorn,0
-Koala,Andrew Wilson,37,Hawthorn,0
-Dolphin,Nicole Martinez,42,Hawthorn,0
-Penguine,Adam Green,29,Camberwell,0
-Kangaroo,Olivia White,34,Camberwell,0
-Koala,Kate Johnson,39,Camberwell,0
-Dolphin,Connor Harris,44,Camberwell,0
-Penguine,Joshua Davis,31,Auburn,0
-Kangaroo,Megan Parker,36,Auburn,0
-Koala,Robert Clark,41,Auburn,0
-Dolphin,Lisa Brown,46,Auburn,0
+CandidateID,Symbol,Name,Age,Suburb,Count
+1,Penguine,John Smith,25,Glenferrie,0
+2,Kangaroo,Emily Jones,30,Glenferrie,0
+3,Koala,Mark Davis,35,Glenferrie,0
+4,Dolphin,Samantha Lee,40,Glenferrie,0
+5,Penguine,David Brown,27,Hawthorn,0
+6,Kangaroo,Julia Taylor,32,Hawthorn,0
+7,Koala,Andrew Wilson,37,Hawthorn,0
+8,Dolphin,Nicole Martinez,42,Hawthorn,0
+9,Penguine,Adam Green,29,Camberwell,0
+10,Kangaroo,Olivia White,34,Camberwell,0
+11,Koala,Kate Johnson,39,Camberwell,0
+12,Dolphin,Connor Harris,44,Camberwell,0
+13,Penguine,Joshua Davis,31,Auburn,0
+14,Kangaroo,Megan Parker,36,Auburn,0
+15,Koala,Robert Clark,41,Auburn,0
+16,Dolphin,Lisa Brown,46,Auburn,0

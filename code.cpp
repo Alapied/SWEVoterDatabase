@@ -11,160 +11,167 @@ string voterdir = "voters.txt";
 vector<vector<string>> candidatedatabase(0, vector<string>(5));
 vector<vector<string>> voterdatabase(0, vector<string>(5));
 
-void printdata() {
-            cout << "Printing : " << candidatedatabase.size() << " records" << endl;
-            for (int i = 0; i < candidatedatabase.size(); i++){
-                
-                for (int j = 0; j < 5; j++)
-                {
-                    cout << candidatedatabase[i][j]<< "\t";
-                    //cout << "test";
-                }
-                cout << endl;
-            }
-            cout << "Printing : " << voterdatabase.size() << " records" << endl;
-            for (int i = 0; i < voterdatabase.size(); i++){
-                
-                for (int j = 0; j < 5; j++)
-                {
-                    cout << voterdatabase[i][j]<< "\t";
-                    //cout << "test";
-                }
-                cout << endl;
-            
-        }
+
+void printdata();
+void writedatabase();
+void readindata();
+int searchDB(string Searchstring, vector<vector<string>> database, int Searchposition);
+void add_to_database(string record[5]);
+void newentry();
+void menuOptionsVoter(int number);
+void menuoptionsadmin();
+int login();
+void menu(bool Admin, int number);
+void printCandidates(string suburb);
+void castVote(int index);
+
+int main(){
+     readindata();
+    int index = login();
+    
+
+    bool isAdmin = false;
+
+    if (index == -1) {
+        cout << "Login failed";
+        //return 0;
+    }
+    if (voterdatabase[index][6] == "true") {
+        isAdmin = true;
+    }
+    menu(isAdmin, index);
+  
+
+    //cout << "printing data";
+    //printdata();
+
+    //menuoptionsvoter();
+    return 0;
 }
 
-void writedatabase(){
+void printdata() {
+            cout << "Printing : " << candidatedatabase.size() << " records" << endl;
+    for (int i = 0; i < candidatedatabase.size(); i++) {
+
+        for (int j = 0; j < 6; j++)
+        {
+            cout << candidatedatabase[i][j] << "\t";
+            //cout << "test";
+        }
+        cout << endl;
+    }
+    cout << "Printing : " << voterdatabase.size() << " records" << endl;
+    for (int i = 0; i < voterdatabase.size(); i++) {
+
+        for (int j = 0; j < 7; j++)
+        {
+            cout << voterdatabase[i][j] << "\t";
+            //cout << "test";
+        }
+        cout << endl;
+
+    }
+}
+
+void writedatabase() {
     fstream file(canddir, ios::out | ios::trunc);
-    if (file.is_open()){
+    if (file.is_open()) {
         cout << "File Opened" << endl;
         if (file.good())
-        {   
+        {
             cout << "database size to write: " << candidatedatabase.size() << endl;
-           for (int i = 1; i < candidatedatabase.size(); i++)
-           {
-            cout << "Writing entry: " << i << endl;
-            cout << "Record: ";
-            for (int j = 0; j < 5; j++)
+            for (int i = 1; i < candidatedatabase.size(); i++)
             {
-                 cout <<  j;
-                if (j == 4){
-                    file << candidatedatabase[i][j] << '\n';
-                } else {
-                    file << candidatedatabase[i][j] << ',';
+                cout << "Writing entry: " << i << endl;
+                cout << "Record: ";
+                for (int j = 0; j < 6; j++)
+                {
+                    cout << j;
+                    if (j == 5) {
+                        file << candidatedatabase[i][j] << '\n';
+                    }
+                    else {
+                        file << candidatedatabase[i][j] << ',';
+                    }
+
                 }
-                
+                cout << endl;
             }
-            cout << endl;
-            }
-            cout << "Ended Write"; 
+            cout << "Ended Write";
             file.close();
         }
     }
     fstream file2(voterdir, ios::out | ios::trunc);
-    if (file2.is_open()){
+    if (file2.is_open()) {
         cout << "File Opened" << endl;
         if (file2.good())
-        {   
+        {
             cout << "database size to write: " << voterdatabase.size() << endl;
-           for (int i = 1; i < voterdatabase.size(); i++)
-           {
-            cout << "Writing entry: " << i << endl;
-            cout << "Record: ";
-            for (int j = 0; j < 5; j++)
+            for (int i = 1; i < voterdatabase.size(); i++)
             {
-                 cout <<  j;
-                if (j == 4){
-                    file2 << voterdatabase[i][j] << '\n';
-                } else {
-                    file2 << voterdatabase[i][j] << ',';
+                cout << "Writing entry: " << i << endl;
+                cout << "Record: ";
+                for (int j = 0; j < 7; j++)
+                {
+                    cout << j;
+                    if (j == 6) {
+                        file2 << voterdatabase[i][j] << '\n';
+                    }
+                    else {
+                        file2 << voterdatabase[i][j] << ',';
+                    }
+
                 }
-                
+                cout << endl;
             }
-            cout << endl;
-            }
-            cout << "Ended Write"; 
+            cout << "Ended Write";
             file2.close();
         }
     }
 }
-void readindata(){
-    vector<string> headerRec = {"Symbol", "Name", "Age", "Suburb", "Votes"};
-    candidatedatabase.push_back(headerRec);
+
+void readindata() {
+    vector<string> headerRec = { "CandidateID","Symbol", "Name", "Age", "Suburb", "Votes" };
+    //candidatedatabase.push_back(headerRec);
     fstream file(canddir);
-    if (file.is_open()){
+    if (file.is_open()) {
         cout << "File Opened" << endl;
         while (file.good())
         {
-           cout << "Started readin entry" << endl;
-           vector<string> entry;
-           
-           if (file.eof()){
-            cout << "end of file, breaking" << endl;
-           }
-           for (int i = 0; i < 5; i++)
-           {
-            string element;
-            if (i == 4){
-                getline(file, element, '\n');
-            } else {
-                getline(file, element, ',');
+            //cout << "Started readin entry" << endl;
+            vector<string> entry;
+
+            if (file.eof()) {
+                //cout << "end of file, breaking" << endl;
             }
-            
-            cout << element << endl;
-            entry.push_back(element);
-             if (file.peek() == '\n'){
-            file.ignore(); // ignore /n
-            cout << "Ignored N";
+            for (int i = 0; i < 6; i++)
+            {
+                string element;
+                if (i == 5) {
+                    getline(file, element, '\n');
+                }
+                else {
+                    getline(file, element, ',');
+                }
+
+                //cout << element << endl;
+                entry.push_back(element);
+                if (file.peek() == '\n') {
+                    file.ignore(); // ignore /n
+                    //cout << "Ignored N";
+                }
+
             }
-            
-           }
-           candidatedatabase.push_back(entry);
-            cout << "entered entry"<< endl;
+            candidatedatabase.push_back(entry);
+            //cout << "entered entry" << endl;
         }
-        cout << "Ended Read"; 
+        //cout << "Ended Read";
         file.close();
-        
-    }
-    vector<string> headerRec2 = {"VoterID", "Name", "PIN",  "Age", "Suburb", "Status", "IsAdmin"};
-    voterdatabase.push_back(headerRec2);
-    fstream file2(voterdir);
-    if (file2.is_open()){
-        cout << "File Opened" << endl;
-        while (file2.good())
-        {
-           cout << "Started readin entry" << endl;
-           vector<string> entry;
-           
-           if (file2.eof()){
-            cout << "end of file, breaking" << endl;
-           }
-           for (int i = 0; i < 7; i++)
-           {
-            string element;
-            if (i == 6){
-                getline(file2, element, '\n');
-            } else {
-                getline(file2, element, ',');
-            }
-            
-            cout << element << endl;
-            entry.push_back(element);
-             if (file2.peek() == '\n'){
-            file2.ignore(); // ignore /n
-            cout << "Ignored N";
-            }
-            
-           }
-           voterdatabase.push_back(entry);
-            cout << "entered entry"<< endl;
-        }
-        cout << "Ended Read"; 
-        file2.close();
-        
+
     }
 }
+	
+	
 int searchDB(string Searchstring,vector<vector<string>> database , int Searchposition){
     int i;
     for (i = 0; i < database.size(); i++)
@@ -228,7 +235,7 @@ void menuOptionsVoter(int index) {
             }
             else
             {
-                //function call
+                castVote(index);
             }
             break;
         case 3:
@@ -306,28 +313,74 @@ int login(){
     
     
 }
-void menu(bool Admin){
-    if (Admin){
+
+void menu(bool Admin, int index) {
+    if (Admin) {
         menuoptionsadmin();
-    } else {
-        //function call for votersmenu
+    }
+    else {
+        menuOptionsVoter(index);
     }
 }
-int main(){
-    readindata();
-    int number = login();
-    bool isAdmin = false;
-    if (number == -1){
-        cout << "Login failed";
-        return 0;
-    } else {
-        if (voterdatabase[number][6] == "yes"){
-            isAdmin = true;
-        }
-        menu(isAdmin);
-    }
-    //cout << "printing data";
-    //printdata();
 
-    return 0;
+void printCandidates(string suburb)
+{
+    cout << "-----------------------------------------------" << endl;
+    cout << setw(20) << left << "Symbol" << setw(10) << "Name" << setw(10) << left << "Number" << endl;
+    for (int i = 1; i < candidatedatabase.size(); i++) {
+        
+        if (suburb == candidatedatabase[i][4])
+        {
+            cout << left << setw(16) << candidatedatabase[i][1];
+            cout << left << setw(16) << candidatedatabase[i][2];
+            cout << left << setw(10) << candidatedatabase[i][0];
+            cout << endl;
+        }
+      
+    }
+    cout << "-----------------------------------------------" << endl;
+    cout << endl;
+}
+
+void castVote(int index)
+{
+    string vote;
+    char confirm = 'N';
+    cout <<endl<< "Suburb: " << voterdatabase[index][4] << endl;
+    printCandidates(voterdatabase[index][4]);
+
+    cout << "Enter candidate number: ";
+    cin >> vote;
+    cin.ignore();
+
+    while (confirm != 'Y') //TO_UPPER
+    {
+        cout << "Please confirm your vote (Y/N): ";
+        cin >> confirm;
+
+        if (confirm == 'N') //TO_UPPER
+        {
+            cout << "Enter candidate number: ";
+            cin >> vote;
+            cin.ignore();
+        }
+    }
+    if (confirm == 'Y')
+    {
+
+        voterdatabase[index][5] = "true";
+
+        for (int i = 1; i < candidatedatabase.size(); i++) {
+
+            if (vote == candidatedatabase[i][0])
+            {
+                int count = stoi(candidatedatabase[i][5]) + 1;
+                candidatedatabase[i][5] = to_string(count);
+                //cout << "VOTE COUNT: " << candidatedatabase[i][5] << endl;
+                break;
+            }
+
+        }
+    }
+    
 }
