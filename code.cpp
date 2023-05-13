@@ -204,32 +204,44 @@ void newentry(){
     add_to_database(record);
 }
 
-void menuoptionsvoter(){
-    int menuoption;
-    // Menuoptions for Voters
-    while (true){
+void menuOptionsVoter(int index) {
+    char menuoption;
+    while (true) {
+        cout << "\nP - Print total votes for candidates" << endl;
+        cout << "A - Vote for a candidate" << endl;
+        cout << "S - Display least voted candidate" << endl;
+        cout << "L - Display most voted candidate" << endl;
+        cout << "Q - Quit\n" << endl;
         cout << "Enter Menu Option: " << endl;
         cin >> menuoption;
+        menuoption = toupper(menuoption);
+        cin.ignore();
         switch (menuoption)
         {
         case 1:
-            newentry();
+            //newentry();
             break;
-        case 2:
-            newentry();
+        case 'A':
+            if (voterdatabase[index][5] == "true")
+            {
+                cout << endl << "You have already casted your vote!" << endl;
+            }
+            else
+            {
+                //function call
+            }
             break;
         case 3:
-            printdata();
+           //printdata();
             break;
         case 4:
-            printdata();
+            //printdata();
             break;
         default:
             cout << "Invalid Menu option" << endl;
             break;
         }
     }
-    
 }
 
 void menuoptionsadmin(){
@@ -298,7 +310,7 @@ void menu(bool Admin){
     if (Admin){
         menuoptionsadmin();
     } else {
-        menuoptionsvoter();
+        //function call for votersmenu
     }
 }
 int main(){
@@ -317,6 +329,5 @@ int main(){
     //cout << "printing data";
     //printdata();
 
-    menuoptionsvoter();
     return 0;
 }
