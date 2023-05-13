@@ -25,8 +25,8 @@ int login();
 void menu(bool Admin, int number);
 void printCandidates(string suburb);
 void castVote(int index);
-void minimumVoteCandidate();
-void maximumVoteCandidate();
+void minVoteCandidate();
+void maxVoteCandidate();
 
 int main(){
      readindata();
@@ -214,7 +214,6 @@ void readindata() {
     }
 }
 
-
 int searchDB(string Searchstring,vector<vector<string>> database , int Searchposition){
     int i;
     for (i = 0; i < database.size(); i++)
@@ -282,10 +281,10 @@ void menuOptionsVoter(int index) {
             }
             break;
         case 'S':
-            minimumVoteCandidate();
+            minVoteCandidate();
             break;
         case 'L':
-            maximumVoteCandidate();
+            maxVoteCandidate();
             break;
         default:
             cout << "Invalid Menu option" << endl;
@@ -429,11 +428,16 @@ void castVote(int index)
 
 }
 
-void minimumVoteCandidate(){
-
+void minVoteCandidate(){
+    int count = 0;
     int minimum = stoi(candidatedatabase[1][5]);
 
     for (int i = 1; i < candidatedatabase.size(); i++) {
+
+        if (stoi(candidatedatabase[i][5]) == 0){
+            count++;
+        }
+
         if (minimum > stoi(candidatedatabase[i][5]))
         {
             minimum = stoi(candidatedatabase[i][5]);
@@ -443,28 +447,40 @@ void minimumVoteCandidate(){
 
     cout << "-----------------------------------------------" << endl;
 
-    cout << "Candidate(s) with the least number of votes: \n" << endl;
-    cout << setw(16) << left << "Symbol" << setw(16) << "Name" << setw(16) << left << "Number of Votes" << endl;
+    if (count == candidatedatabase.size()-1){
+        cout << "None of the candidates has been voted yet" << endl;
+    }
+    else{
 
-    for (int i = 1; i < candidatedatabase.size(); i++) {
+        cout << "Candidate(s) with the least number of votes: \n" << endl;
+        cout << setw(16) << left << "Symbol" << setw(16) << "Name" << setw(16) << left << "Number of Votes" << endl;
 
-        if (minimum == stoi(candidatedatabase[i][5]))
-        {
-            cout << left << setw(16) << candidatedatabase[i][1];
-            cout << left << setw(16) << candidatedatabase[i][2];
-            cout << left << setw(16) << candidatedatabase[i][5] << endl;
+        for (int i = 1; i < candidatedatabase.size(); i++) {
+
+            if (minimum == stoi(candidatedatabase[i][5]))
+            {
+                cout << left << setw(16) << candidatedatabase[i][1];
+                cout << left << setw(16) << candidatedatabase[i][2];
+                cout << left << setw(16) << candidatedatabase[i][5] << endl;
+            }
+
         }
-
     }
     cout << "-----------------------------------------------" << endl;
     cout << endl;
 }
 
-void maximumVoteCandidate(){
+void maxVoteCandidate(){
 
+    int count = 0;
     int maximum = stoi(candidatedatabase[1][5]);
 
     for (int i = 1; i < candidatedatabase.size(); i++) {
+
+        if (stoi(candidatedatabase[i][5]) == 0){
+            count++;
+        }
+
         if (maximum < stoi(candidatedatabase[i][5]))
         {
             maximum = stoi(candidatedatabase[i][5]);
@@ -473,16 +489,21 @@ void maximumVoteCandidate(){
 
     cout << "-----------------------------------------------" << endl;
 
-    cout << "Candidate(s) with the least number of votes: \n" << endl;
-    cout << setw(16) << left << "Symbol" << setw(16) << "Name" << setw(16) << left << "Number of Votes" << endl;
+    if (count == candidatedatabase.size()-1){
+        cout << "None of the candidates has been voted yet" << endl;
+    }
+    else{
+        cout << "Candidate(s) with the least number of votes: \n" << endl;
+        cout << setw(16) << left << "Symbol" << setw(16) << "Name" << setw(16) << left << "Number of Votes" << endl;
 
-    for (int i = 1; i < candidatedatabase.size(); i++) {
+        for (int i = 1; i < candidatedatabase.size(); i++) {
 
-        if (maximum == stoi(candidatedatabase[i][5]))
-        {
-            cout << left << setw(16) << candidatedatabase[i][1];
-            cout << left << setw(16) << candidatedatabase[i][2];
-            cout << left << setw(16) << candidatedatabase[i][5] << endl;
+            if (maximum == stoi(candidatedatabase[i][5]))
+            {
+                cout << left << setw(16) << candidatedatabase[i][1];
+                cout << left << setw(16) << candidatedatabase[i][2];
+                cout << left << setw(16) << candidatedatabase[i][5] << endl;
+            }
         }
     }
     cout << "-----------------------------------------------" << endl;
