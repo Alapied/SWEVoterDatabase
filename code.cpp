@@ -29,7 +29,7 @@ void castVote(int index);
 int main(){
      readindata();
     int index = login();
-    
+
 
     bool isAdmin = false;
 
@@ -41,7 +41,7 @@ int main(){
         isAdmin = true;
     }
     menu(isAdmin, index);
-  
+
 
     //cout << "printing data";
     //printdata();
@@ -170,9 +170,49 @@ void readindata() {
         file.close();
 
     }
+
+
+    vector<string> headerRec2 = { "VoterID", "Name", "PIN",  "Age", "Suburb", "Status", "IsAdmin" };
+    //voterdatabase.push_back(headerRec2);
+    fstream file2(voterdir);
+    if (file2.is_open()) {
+        //cout << "File Opened" << endl;
+        while (file2.good())
+        {
+            // cout << "Started reading entry" << endl;
+            vector<string> entry;
+
+            if (file2.eof()) {
+                //cout << "end of file, breaking" << endl;
+            }
+            for (int i = 0; i < 7; i++)
+            {
+                string element;
+                if (i == 6) {
+                    getline(file2, element, '\n');
+                }
+                else {
+                    getline(file2, element, ',');
+                }
+
+                //cout << element << endl;
+                entry.push_back(element);
+                if (file2.peek() == '\n') {
+                    file2.ignore(); // ignore /n
+                    //cout << "Ignored N";
+                }
+
+            }
+            voterdatabase.push_back(entry);
+            //cout << "entered entry" << endl;
+        }
+        //cout << "Ended Read";
+        file2.close();
+
+    }
 }
-	
-	
+
+
 int searchDB(string Searchstring,vector<vector<string>> database , int Searchposition){
     int i;
     for (i = 0; i < database.size(); i++)
@@ -181,7 +221,7 @@ int searchDB(string Searchstring,vector<vector<string>> database , int Searchpos
             return i;
         }
     }
-    
+
     return i = -1;
 }
 
@@ -193,9 +233,9 @@ void add_to_database(string record[5]){
 }
 
 void newentry(){
-    string record[5]; 
+    string record[5];
     string clearbuffer;
-    cin.clear();   
+    cin.clear();
     cout << "Enter ID: ";
     getline(cin, clearbuffer);
     getline(cin, record[0]);
@@ -277,7 +317,7 @@ void menuoptionsadmin(){
             break;
         }
     }
-    
+
 }
 
 int login(){
@@ -311,8 +351,8 @@ int login(){
     if (loggedin == true){
         return index;
     }
-    
-    
+
+
 }
 
 void menu(bool Admin, int index) {
@@ -329,7 +369,7 @@ void printCandidates(string suburb)
     cout << "-----------------------------------------------" << endl;
     cout << setw(20) << left << "Symbol" << setw(10) << "Name" << setw(10) << left << "Number" << endl;
     for (int i = 1; i < candidatedatabase.size(); i++) {
-        
+
         if (suburb == candidatedatabase[i][4])
         {
             cout << left << setw(16) << candidatedatabase[i][1];
@@ -337,7 +377,7 @@ void printCandidates(string suburb)
             cout << left << setw(10) << candidatedatabase[i][0];
             cout << endl;
         }
-      
+
     }
     cout << "-----------------------------------------------" << endl;
     cout << endl;
@@ -383,5 +423,5 @@ void castVote(int index)
 
         }
     }
-    
+
 }
