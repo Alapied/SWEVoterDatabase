@@ -7,10 +7,10 @@
 
 using namespace std;
 
-string canddir = "candiates.txt";
+string canddir = "candidates.txt";
 string voterdir = "voters.txt";
 vector<vector<string>> candidatedatabase(0, vector<string>(5));
-vector<vector<string>> voterdatabase(0, vector<string>(5));
+vector<vector<string>> voterdatabase(0, vector<string>(7));
 
 
 void printdata();
