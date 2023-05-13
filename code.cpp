@@ -272,7 +272,7 @@ int login(){
         cout << "Please Enter ID: ";
         getline(cin, IDstring);
         index = searchDB(IDstring,voterdatabase , 0);
-        if (index != -1){
+        if (index == !-1){
             string PIN;
             cout << "Please enter PIN: ";
             getline(cin , PIN);
