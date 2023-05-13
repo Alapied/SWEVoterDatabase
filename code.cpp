@@ -395,20 +395,24 @@ void castVote(int index)
     cin >> vote;
     cin.ignore();
 
-    while (confirm != 'Y') //TO_UPPER
+    while (toupper(confirm) != 'Y')
     {
         cout << "Please confirm your vote (Y/N): ";
         cin >> confirm;
         confirm = toupper(confirm);
 
-        if (confirm == 'N') //TO_UPPER
+        if (toupper(confirm) == 'N') //TO_UPPER
         {
             cout << "Enter candidate number: ";
             cin >> vote;
             cin.ignore();
         }
+        else
+        {
+            cout << "Invalid input" << endl;
+        }
     }
-    if (confirm == 'Y')
+    if (toupper(confirm) == 'Y')
     {
 
         voterdatabase[index][5] = "true";
@@ -424,6 +428,9 @@ void castVote(int index)
             }
 
         }
+        cout << "-----------------------------------------------" << endl;
+        cout << "Vote confirmed" << endl;
+        cout << "-----------------------------------------------" << endl;
     }
 
 }
