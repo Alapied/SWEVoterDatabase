@@ -27,6 +27,7 @@ void printCandidates(string suburb);
 void castVote(int index);
 void minVoteCandidate();
 void maxVoteCandidate();
+void displayAllCandidates();
 
 int main(){
      readindata();
@@ -267,8 +268,8 @@ void menuOptionsVoter(int index) {
         cin.ignore();
         switch (menuoption)
         {
-        case 1:
-            //newentry();
+        case 'P':
+            displayAllCandidates();
             break;
         case 'A':
             if (voterdatabase[index][5] == "true")
@@ -362,6 +363,48 @@ void menu(bool Admin, int index) {
     }
     else {
         menuOptionsVoter(index);
+    }
+}
+
+void displayAllCandidates(){
+    int number;
+    cout << "-----------------------------------------------" << endl;
+    cout << "List of Candidates" << endl;
+
+    cout << setw(16) << left << "Number" << setw(16) << "Symbol" << setw(16) << left << "Name" << endl;
+    for (int i = 1; i < candidatedatabase.size(); i++) {
+
+            cout << left << setw(10) << candidatedatabase[i][0];
+            cout << left << setw(16) << candidatedatabase[i][1];
+            cout << left << setw(16) << candidatedatabase[i][2];
+            cout << endl;
+
+    }
+
+    cout << "-----------------------------------------------" << endl;
+    cout << endl;
+
+    cout << "Enter the Candidate Number to view the vote count: " << endl;
+    cin >> number;
+    cin.ignore();
+
+    for (int i = 1; i < candidatedatabase.size(); i++) {
+
+        if (number == stoi(candidatedatabase[i][0]))
+        {   
+            cout << "----------------------------------------------------------" << endl;
+
+            cout << setw(16) << left << "Number" << setw(16) << "Symbol" << setw(16) << left << "Name" << setw(16) << "Vote Count" << endl;
+
+            cout << left << setw(16) << candidatedatabase[i][0];
+            cout << left << setw(16) << candidatedatabase[i][1];
+            cout << left << setw(16) << candidatedatabase[i][2];
+            cout << left << setw(10) << candidatedatabase[i][5];
+            cout << endl;
+
+            cout << "----------------------------------------------------------" << endl;
+        }
+
     }
 }
 
