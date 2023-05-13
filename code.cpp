@@ -20,7 +20,7 @@ int searchDB(string Searchstring, vector<vector<string>> database, int Searchpos
 void add_to_database(string record[5]);
 void newentry();
 void menuOptionsVoter(int number);
-void menuoptionsadmin();
+void menuoptionsadmin(int);
 int login();
 void menu(bool Admin, int number);
 void printCandidates(string suburb);
@@ -28,6 +28,8 @@ void castVote(int index);
 void minVoteCandidate();
 void maxVoteCandidate();
 void displayAllCandidates();
+void addMultiVote(string);
+
 
 int main(){
      readindata();
@@ -227,32 +229,6 @@ int searchDB(string Searchstring,vector<vector<string>> database , int Searchpos
     return i = -1;
 }
 
-void add_to_database(string record[5]){
-    vector<string> vecRecord(record, record + 5);
-    candidatedatabase.push_back(vecRecord);
-    voterdatabase.push_back(vecRecord);
-    writedatabase();
-}
-
-void newentry(){
-    string record[5];
-    string clearbuffer;
-    cin.clear();
-    cout << "Enter ID: ";
-    getline(cin, clearbuffer);
-    getline(cin, record[0]);
-    cout << "Enter Name: ";
-    getline(cin, record[1]);
-    cout << "Enter Age";
-    getline(cin, record[2]);
-    cout << "Enter Suburb";
-    getline(cin, record[3]);
-    cout << "Enter Status";
-    getline(cin, record[4]);
-    cout << "Enter a Count";
-    getline(cin, record[4]);
-    add_to_database(record);
-}
 
 void menuOptionsVoter(int index) {
     char menuoption;
@@ -279,6 +255,7 @@ void menuOptionsVoter(int index) {
             else
             {
                 castVote(index);
+                writedatabase();
             }
             break;
         case 'S':
@@ -294,25 +271,47 @@ void menuOptionsVoter(int index) {
     }
 }
 
-void menuoptionsadmin(){
-    int menuoption;
-    // Menuoptions for admins
-    while (true){
+void menuoptionsadmin(int index){
+    char menuoption;
+    string inputID;
+    while (true) {
+        cout << "\nP - Print total votes for candidates" << endl;
+        cout << "V - Cast personal vote for a candidate" << endl;
+        cout << "A - Count Extra Votes - Add Votes to candidate" << endl;
+        cout << "S - Display least voted candidate" << endl;
+        cout << "L - Display most voted candidate" << endl;
+        cout << "Q - Quit\n" << endl;
         cout << "Enter Menu Option: " << endl;
         cin >> menuoption;
+        menuoption = toupper(menuoption);
+        cin.ignore();
         switch (menuoption)
         {
-        case 1:
-            newentry();
+        case 'P':
+            displayAllCandidates();
             break;
-        case 2:
-            newentry();
+        case 'V':
+            if (voterdatabase[index][5] == "true")
+            {
+                cout << endl << "You have already casted your vote!" << endl;
+            }
+            else
+            {
+                castVote(index);
+                writedatabase();
+            }
             break;
-        case 3:
-            printdata();
+        case 'S':
+            minVoteCandidate();
             break;
-        case 4:
-            printdata();
+        case 'L':
+            maxVoteCandidate();
+            break;
+        case 'A':
+            cout << "Please input the candidate id to add votes: ";
+            getline(cin, inputID);
+            addMultiVote(inputID);
+            writedatabase();
             break;
         default:
             cout << "Invalid Menu option" << endl;
@@ -352,14 +351,14 @@ int login(){
     }
     if (loggedin == true){
         return index;
+    } else {
+        return -1;
     }
-
-
 }
 
 void menu(bool Admin, int index) {
     if (Admin) {
-        menuoptionsadmin();
+        menuoptionsadmin(index);
     }
     else {
         menuOptionsVoter(index);
@@ -476,6 +475,47 @@ void castVote(int index)
         cout << "-----------------------------------------------" << endl;
     }
 
+}
+
+void addMultiVote(string CandID){
+    int count;
+    int CandIndex = searchDB(CandID, candidatedatabase, 0);
+    if (CandIndex == -1){
+        cout << "Invalid Candidate ID" << endl;
+        return;
+    }
+    char confirm = 'N';
+    cout << "Please input the amount of votes to count";
+    cin >> count;
+    for (int i = 0; i < count; i++)
+    {
+        
+        string voteID;
+        cout << "Please input the VoterID: ";
+        getline(cin , voteID);
+        int index = searchDB(voteID, voterdatabase, 0);
+        if (index == !-1){
+            cout << "Please confirm the vote (Y/N): ";
+            cin >> confirm;
+            confirm = toupper(confirm);
+            if (toupper(confirm) == 'N') //TO_UPPER
+            {
+                break;
+            }
+            else
+            {
+                cout << "Invalid input" << endl;
+            }
+            if (toupper(confirm) == 'Y'){
+                voterdatabase[index][5] = "true";
+                int CandCount = stoi(candidatedatabase[i][5]) + 1;
+                candidatedatabase[i][5] = to_string(CandCount);                   
+                cout << "-----------------------------------------------" << endl;
+                cout << "Vote confirmed" << endl;
+                cout << "-----------------------------------------------" << endl;
+            }
+        }
+    }
 }
 
 void minVoteCandidate(){
