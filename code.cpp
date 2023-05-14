@@ -12,8 +12,8 @@ string voterdir = "voters.txt";
 vector<vector<string>> candidatedatabase(0, vector<string>(5));
 vector<vector<string>> voterdatabase(0, vector<string>(7));
 
+bool DEBUGMODE = false;
 
-void printdata();
 void writedatabase();
 void readindata();
 int searchDB(string Searchstring, vector<vector<string>> database, int Searchposition);
@@ -55,44 +55,31 @@ int main(){
     return 0;
 }
 
-void printdata() {
-            cout << "Printing : " << candidatedatabase.size() << " records" << endl;
-    for (int i = 0; i < candidatedatabase.size(); i++) {
-
-        for (int j = 0; j < 6; j++)
-        {
-            cout << candidatedatabase[i][j] << "\t";
-            //cout << "test";
-        }
-        cout << endl;
-    }
-    cout << "Printing : " << voterdatabase.size() << " records" << endl;
-    for (int i = 0; i < voterdatabase.size(); i++) {
-
-        for (int j = 0; j < 7; j++)
-        {
-            cout << voterdatabase[i][j] << "\t";
-            //cout << "test";
-        }
-        cout << endl;
-
-    }
-}
-
 void writedatabase() {
+    cout << "Saving Changes" << endl;
     fstream file(canddir, ios::out | ios::trunc);
     if (file.is_open()) {
-        cout << "File Opened" << endl;
+        if (DEBUGMODE)
+        {
+           cout << "File Opened" << endl;
+        }
         if (file.good())
         {
-            cout << "database size to write: " << candidatedatabase.size() << endl;
-            for (int i = 1; i < candidatedatabase.size(); i++)
+            if (DEBUGMODE)
             {
-                cout << "Writing entry: " << i << endl;
-                cout << "Record: ";
+                cout << "database size to write: " << candidatedatabase.size() << endl;
+            }
+            for (int i = 0; i < candidatedatabase.size(); i++)
+            {
+                if (DEBUGMODE){
+                    cout << "Writing entry: " << i << endl;
+                    cout << "Record: ";
+                }
                 for (int j = 0; j < 6; j++)
                 {
-                    cout << j;
+                    if (DEBUGMODE){
+                        cout << j;
+                    }
                     if (j == 5) {
                         file << candidatedatabase[i][j] << '\n';
                     }
@@ -101,25 +88,40 @@ void writedatabase() {
                     }
 
                 }
-                cout << endl;
+                if (DEBUGMODE){
+                    cout << endl;
+                }
+                
             }
-            cout << "Ended Write";
+            if (DEBUGMODE){
+                cout << "Ended Write" << endl;
+            }
             file.close();
         }
     }
     fstream file2(voterdir, ios::out | ios::trunc);
     if (file2.is_open()) {
-        cout << "File Opened" << endl;
+        if (DEBUGMODE)
+        {
+           cout << "File Opened" << endl;
+        }
         if (file2.good())
         {
-            cout << "database size to write: " << voterdatabase.size() << endl;
-            for (int i = 1; i < voterdatabase.size(); i++)
+            if (DEBUGMODE)
             {
-                cout << "Writing entry: " << i << endl;
-                cout << "Record: ";
+                cout << "database size to write: " << candidatedatabase.size() << endl;
+            }
+            for (int i = 0; i < voterdatabase.size(); i++)
+            {
+                if (DEBUGMODE){
+                    cout << "Writing entry: " << i << endl;
+                    cout << "Record: ";
+                }
                 for (int j = 0; j < 7; j++)
                 {
-                    cout << j;
+                    if (DEBUGMODE){
+                        cout << j;
+                    }
                     if (j == 6) {
                         file2 << voterdatabase[i][j] << '\n';
                     }
@@ -128,10 +130,15 @@ void writedatabase() {
                     }
 
                 }
-                cout << endl;
+                if (DEBUGMODE){
+                    cout << endl;
+                }
             }
-            cout << "Ended Write";
+            if (DEBUGMODE){
+                cout << "Ended Write" << endl;
+            }
             file2.close();
+            cout << "Database Saved" << endl;
         }
     }
 }
@@ -141,14 +148,20 @@ void readindata() {
     //candidatedatabase.push_back(headerRec);
     fstream file(canddir);
     if (file.is_open()) {
-        cout << "File Opened" << endl;
+        if (DEBUGMODE)
+        {
+           cout << "File Opened" << endl;
+        }
         while (file.good())
         {
-            //cout << "Started readin entry" << endl;
+            if (DEBUGMODE){
+                cout << "Started record copy" << endl;
+            }
             vector<string> entry;
 
             if (file.eof()) {
                 //cout << "end of file, breaking" << endl;
+                //break;
             }
             for (int i = 0; i < 6; i++)
             {
@@ -225,7 +238,6 @@ int searchDB(string Searchstring,vector<vector<string>> database , int Searchpos
             return i;
         }
     }
-
     return i = -1;
 }
 
@@ -263,6 +275,9 @@ void menuOptionsVoter(int index) {
             break;
         case 'L':
             maxVoteCandidate();
+            break;
+        case 'Q':
+            exit(0);
             break;
         default:
             cout << "Invalid Menu option" << endl;
@@ -311,7 +326,10 @@ void menuoptionsadmin(int index){
             cout << "Please input the candidate id to add votes: ";
             getline(cin, inputID);
             addMultiVote(inputID);
-            writedatabase();
+            //writedatabase();
+            break;
+        case 'Q':
+            exit(0);
             break;
         default:
             cout << "Invalid Menu option" << endl;
@@ -479,42 +497,66 @@ void castVote(int index)
 
 void addMultiVote(string CandID){
     int count;
+    string buffer;
     int CandIndex = searchDB(CandID, candidatedatabase, 0);
     if (CandIndex == -1){
         cout << "Invalid Candidate ID" << endl;
         return;
     }
     char confirm = 'N';
-    cout << "Please input the amount of votes to count";
+    cout << "Please input the amount of votes to count for this candidate: ";
     cin >> count;
     for (int i = 0; i < count; i++)
     {
         
         string voteID;
         cout << "Please input the VoterID: ";
+        getline(cin , buffer);
         getline(cin , voteID);
         int index = searchDB(voteID, voterdatabase, 0);
-        if (index == !-1){
-            cout << "Please confirm the vote (Y/N): ";
-            cin >> confirm;
-            confirm = toupper(confirm);
-            if (toupper(confirm) == 'N') //TO_UPPER
-            {
+        if (index != -1){
+            if (voterdatabase[index][5]== "true"){
+                cout << endl << "This user have already cast their vote!" << endl;
+            } else {
+                  cout << "Please confirm the vote for "<< voteID << " (Y/N): ";
+                cin >> confirm;
+                confirm = toupper(confirm);
+                if (toupper(confirm) == 'N') //TO_UPPER
+                {
+                    continue;
+                } else if (toupper(confirm) == 'Y'){
+                    voterdatabase[index][5] = "true";
+                    int CandCount = stoi(candidatedatabase[CandIndex][5]) + 1;
+                    candidatedatabase[CandIndex][5] = to_string(CandCount);                   
+                    cout << "-----------------------------------------------" << endl;
+                    cout << "Vote confirmed" << endl;
+                    cout << "-----------------------------------------------" << endl;
+                } else {
+                    cout << "Invalid Option chosen" << endl;
+                }
+            }
+        } else {
+            char conf = 'N';
+            cout << "Error - Invalid VoterID" << endl;
+            cout << "Would you like to redo the last input? (Y/N): ";
+            cin >> conf;
+            conf = toupper(conf);
+            if (conf == 'Y'){
+                i--;
+            }  else {
                 break;
             }
-            else
-            {
-                cout << "Invalid input" << endl;
-            }
-            if (toupper(confirm) == 'Y'){
-                voterdatabase[index][5] = "true";
-                int CandCount = stoi(candidatedatabase[i][5]) + 1;
-                candidatedatabase[i][5] = to_string(CandCount);                   
-                cout << "-----------------------------------------------" << endl;
-                cout << "Vote confirmed" << endl;
-                cout << "-----------------------------------------------" << endl;
-            }
+
         }
+    }
+    char save = 'N';
+    cout << "Would you like to save your changes? (Y/N): ";
+    cin >> save;
+    save = toupper(save);
+    if (save == 'Y'){
+        writedatabase();
+    } else {
+        cout << "Not saving" << endl;
     }
 }
 
