@@ -7,13 +7,15 @@
 
 using namespace std;
 
+//Global Variables
 string canddir = "candidates.txt";
 string voterdir = "voters.txt";
-vector<vector<string>> candidatedatabase(0, vector<string>(5));
+vector<vector<string>> candidatedatabase(0, vector<string>(5)); 
 vector<vector<string>> voterdatabase(0, vector<string>(7));
-
 bool DEBUGMODE = false;
 
+
+// Function Prototypes
 void writedatabase();
 void readindata();
 int searchDB(string Searchstring, vector<vector<string>> database, int Searchposition);
@@ -32,23 +34,24 @@ void addMultiVote(string);
 
 
 int main(){
-    readindata();
-    int index = login();
+    readindata(); //Takes Records in a file and copies them to vector databases
+    int index = login(); //Calls login and returns the index of the voter that has logged in
     bool isAdmin = false;
     if (index == -1) {
         cout << "Login failed";
     } else {
         if (voterdatabase[index][6] == "true") {
+            //checks the database whether this user has admin privileges
             isAdmin = true;
         }
-        menu(isAdmin, index);
+        menu(isAdmin, index); //runs the menu
     }
     return 0;
 }
 
 void writedatabase() {
     cout << "Saving Changes" << endl;
-    fstream file(canddir, ios::out | ios::trunc);
+    fstream file(canddir, ios::out | ios::trunc); //opens candidate file for output to override.
     if (file.is_open()) {
         if (DEBUGMODE)
         {
@@ -62,6 +65,7 @@ void writedatabase() {
             }
             for (int i = 0; i < candidatedatabase.size(); i++)
             {
+                //loops through each record in the database and saves indiviual data as comma separated values
                 if (DEBUGMODE){
                     cout << "Writing entry: " << i << endl;
                     cout << "Record: ";
@@ -89,16 +93,17 @@ void writedatabase() {
             file.close();
         }
     }
-    fstream file2(voterdir, ios::out | ios::trunc);
+    fstream file2(voterdir, ios::out | ios::trunc); //opens voter file for output to override.
     if (file2.is_open()) {
         if (DEBUGMODE){
            cout << "File Opened" << endl;
         }
         if (file2.good()){
             if (DEBUGMODE){
-                cout << "database size to write: " << candidatedatabase.size() << endl;
+                cout << "database size to write: " << voterdatabase.size() << endl;
             }
             for (int i = 0; i < voterdatabase.size(); i++){
+                //loops through each record in the database and saves indiviual data as comma separated values
                 if (DEBUGMODE){
                     cout << "Writing entry: " << i << endl;
                     cout << "Record: ";
@@ -131,7 +136,7 @@ void writedatabase() {
 
 void readindata() {
     //vector<string> headerRec = { "CandidateID","Symbol", "Name", "Age", "Suburb", "Votes" };
-    fstream file(canddir);
+    fstream file(canddir); //opens candidate file for reading
     if (file.is_open()) {
         if (DEBUGMODE)
         {
@@ -142,7 +147,7 @@ void readindata() {
             if (DEBUGMODE){
                 cout << "Started record copy" << endl;
             }
-            vector<string> entry;
+            vector<string> entry; //create empty string vector to hold the record temporarily 
 
             if (file.eof()) {
                 //cout << "end of file, breaking" << endl;
@@ -159,14 +164,15 @@ void readindata() {
                 }
 
                 //cout << element << endl;
-                entry.push_back(element);
+                entry.push_back(element); // add the element to the temporary vector
+
                 if (file.peek() == '\n') {
                     file.ignore(); // ignore /n
                     //cout << "Ignored N";
                 }
 
             }
-            candidatedatabase.push_back(entry);
+            candidatedatabase.push_back(entry); //append the temporary vector to the end of the database
             //cout << "entered entry" << endl;
         }
         //cout << "Ended Read";
@@ -207,13 +213,15 @@ void readindata() {
 }
 
 int searchDB(string Searchstring,vector<vector<string>> database , int Searchposition){
+    //compares all values in one coloumn to a string and return the index of the first successful comparison
+    //takes the coloumn number as an integer (search position)
     int i;
     for (i = 0; i < database.size(); i++){
         if (database[i][Searchposition] == Searchstring){
             return i;
         }
     }
-    return i = -1;
+    return i = -1; // if not found return -1 index
 }
 
 void menuOptionsVoter(int index) {
@@ -319,16 +327,18 @@ int login(){
     bool loggedin = false;
     while (loggedin == false){
         if (attempts > 3){
+            //no more than 3 login attempts at one time
             return -1;
         }
         cout << "Please Enter ID: ";
         getline(cin, IDstring);
-        index = searchDB(IDstring,voterdatabase , 0);
+        index = searchDB(IDstring,voterdatabase , 0); //search the database for a matching ID
         if (index != -1){
             string PIN;
             cout << "Please enter PIN: ";
             getline(cin , PIN);
             if (voterdatabase[index][2] == PIN){
+                //compare the PIN in the database to entered pin
                 loggedin = true;
                 break;
             } else {
@@ -340,6 +350,7 @@ int login(){
             attempts++;
         }
     }
+    //if login was successful return the database index of the user, if not, return -1 indicating unsuccesful
     if (loggedin == true){
         return index;
     } else {
@@ -348,6 +359,7 @@ int login(){
 }
 
 void menu(bool Admin, int index) {
+    //selects the menu interface to show if the user is an admin or not
     if (Admin) {
         menuoptionsadmin(index);
     }
@@ -451,23 +463,24 @@ void castVote(int index)
 void addMultiVote(string CandID){
     int count;
     string buffer;
-    int CandIndex = searchDB(CandID, candidatedatabase, 0);
+    int CandIndex = searchDB(CandID, candidatedatabase, 0); // get the id of the candidate from the user and check if its valid
     if (CandIndex == -1){
         cout << "Invalid Candidate ID" << endl;
         return;
     }
     char confirm = 'N';
-    cout << "Please input the amount of votes to count for this candidate: ";
+    cout << "Please input the amount of votes to count for this candidate: "; //the amount of votes to count
     cin >> count;
     for (int i = 0; i < count; i++)
     {
         string voteID;
         cout << "Please input the VoterID: ";
-        getline(cin , buffer);
+        getline(cin , buffer); //Bugfix possibly could be fixed with .ignore
         getline(cin , voteID);
         int index = searchDB(voteID, voterdatabase, 0);
         if (index != -1){
             if (voterdatabase[index][5]== "true"){
+                //check if the voter has already voted
                 cout << endl << "This user have already cast their vote!" << endl;
             } else {
                 cout << "Please confirm the vote for "<< voteID << " (Y/N): ";
@@ -477,8 +490,8 @@ void addMultiVote(string CandID){
                 {
                     continue;
                 } else if (toupper(confirm) == 'Y'){
-                    voterdatabase[index][5] = "true";
-                    int CandCount = stoi(candidatedatabase[CandIndex][5]) + 1;
+                    voterdatabase[index][5] = "true"; //set the voter in the database to voted
+                    int CandCount = stoi(candidatedatabase[CandIndex][5]) + 1; //grab the current count from the database and add 1
                     candidatedatabase[CandIndex][5] = to_string(CandCount);                   
                     cout << "-----------------------------------------------" << endl;
                     cout << "Vote confirmed" << endl;
