@@ -10,7 +10,7 @@ using namespace std;
 //Global Variables
 string canddir = "candidates.txt";
 string voterdir = "voters.txt";
-vector<vector<string>> candidatedatabase(0, vector<string>(5)); 
+vector<vector<string>> candidatedatabase(0, vector<string>(5));
 vector<vector<string>> voterdatabase(0, vector<string>(7));
 bool DEBUGMODE = false;
 
@@ -85,7 +85,7 @@ void writedatabase() {
                 if (DEBUGMODE){
                     cout << endl;
                 }
-                
+
             }
             if (DEBUGMODE){
                 cout << "Ended Write" << endl;
@@ -147,7 +147,7 @@ void readindata() {
             if (DEBUGMODE){
                 cout << "Started record copy" << endl;
             }
-            vector<string> entry; //create empty string vector to hold the record temporarily 
+            vector<string> entry; //create empty string vector to hold the record temporarily
 
             if (file.eof()) {
                 //cout << "end of file, breaking" << endl;
@@ -387,7 +387,7 @@ void displayAllCandidates(){
     cin.ignore();
     for (int i = 1; i < candidatedatabase.size(); i++) {
         if (number == stoi(candidatedatabase[i][0]))
-        {   
+        {
             cout << "----------------------------------------------------------" << endl;
             cout << setw(16) << left << "Number" << setw(16) << "Symbol" << setw(16) << left << "Name" << setw(16) << "Vote Count" << endl;
             cout << left << setw(16) << candidatedatabase[i][0];
@@ -417,21 +417,21 @@ void printCandidates(string suburb)
     cout << endl;
 }
 
-void castVote(int index)
+void castVote(int index) //function to add a vote to a candidate
 {
     string vote;
     char confirm = 'N';
     cout <<endl<< "Suburb: " << voterdatabase[index][4] << endl;
-    printCandidates(voterdatabase[index][4]);
+    printCandidates(voterdatabase[index][4]); // prints candidates matching the voters suburb
     cout << "Enter candidate number: ";
     cin >> vote;
     cin.ignore();
-    while (toupper(confirm) != 'Y')
+    while (toupper(confirm) != 'Y') //voter must confirm the vote
     {
         cout << "Please confirm your vote (Y/N): ";
         cin >> confirm;
         confirm = toupper(confirm);
-        if (toupper(confirm) == 'N') //TO_UPPER
+        if (toupper(confirm) == 'N') // if user entered N then ask to vote again
         {
             cout << "Enter candidate number: ";
             cin >> vote;
@@ -439,18 +439,17 @@ void castVote(int index)
         }
         else
         {
-            cout << "Invalid input" << endl;
+            cout << "Invalid input" << endl; // error message for Incorrect inputs
         }
     }
-    if (toupper(confirm) == 'Y')
+    if (toupper(confirm) == 'Y') // if voter has confirmed the vote.
     {
-        voterdatabase[index][5] = "true";
-        for (int i = 1; i < candidatedatabase.size(); i++) {
+        voterdatabase[index][5] = "true"; //change the voter's Status to true.
+        for (int i = 1; i < candidatedatabase.size(); i++) { // checks the candidate database for the candidate id
             if (vote == candidatedatabase[i][0])
             {
-                int count = stoi(candidatedatabase[i][5]) + 1;
-                candidatedatabase[i][5] = to_string(count);
-                //cout << "VOTE COUNT: " << candidatedatabase[i][5] << endl;
+                int count = stoi(candidatedatabase[i][5]) + 1; // gets the vote count for the candidate and increase by 1
+                candidatedatabase[i][5] = to_string(count); //convert int to string and put back in the vector
                 break;
             }
         }
@@ -492,7 +491,7 @@ void addMultiVote(string CandID){
                 } else if (toupper(confirm) == 'Y'){
                     voterdatabase[index][5] = "true"; //set the voter in the database to voted
                     int CandCount = stoi(candidatedatabase[CandIndex][5]) + 1; //grab the current count from the database and add 1
-                    candidatedatabase[CandIndex][5] = to_string(CandCount);                   
+                    candidatedatabase[CandIndex][5] = to_string(CandCount);
                     cout << "-----------------------------------------------" << endl;
                     cout << "Vote confirmed" << endl;
                     cout << "-----------------------------------------------" << endl;
@@ -524,10 +523,10 @@ void addMultiVote(string CandID){
     }
 }
 
-void minVoteCandidate(){
+void minVoteCandidate(){ //checks and prints the minimum voted candidates
     int count = 0;
     int minimum = stoi(candidatedatabase[1][5]);
-    for (int i = 1; i < candidatedatabase.size(); i++) {
+    for (int i = 1; i < candidatedatabase.size(); i++) { //checs for the minimum voted number
         if (stoi(candidatedatabase[i][5]) == 0){
             count++;
         }
@@ -543,7 +542,7 @@ void minVoteCandidate(){
     else{
         cout << "Candidate(s) with the least number of votes: \n" << endl;
         cout << setw(16) << left << "Symbol" << setw(16) << "Name" << setw(16) << left << "Number of Votes" << endl;
-        for (int i = 1; i < candidatedatabase.size(); i++) {
+        for (int i = 1; i < candidatedatabase.size(); i++) { //prints all the candidates having the lowest number of votes
             if (minimum == stoi(candidatedatabase[i][5]))
             {
                 cout << left << setw(16) << candidatedatabase[i][1];
@@ -556,7 +555,7 @@ void minVoteCandidate(){
     cout << endl;
 }
 
-void maxVoteCandidate(){
+void maxVoteCandidate(){ //checks and prints the maximum voted candidates
     int count = 0;
     int maximum = stoi(candidatedatabase[1][5]);
     for (int i = 1; i < candidatedatabase.size(); i++) {
@@ -573,9 +572,9 @@ void maxVoteCandidate(){
         cout << "None of the candidates has been voted yet" << endl;
     }
     else{
-        cout << "Candidate(s) with the least number of votes: \n" << endl;
+        cout << "Candidate(s) with the maximum number of votes: \n" << endl;
         cout << setw(16) << left << "Symbol" << setw(16) << "Name" << setw(16) << left << "Number of Votes" << endl;
-        for (int i = 1; i < candidatedatabase.size(); i++) {
+        for (int i = 1; i < candidatedatabase.size(); i++) { //prints all the candidates having the maximum number of votes
             if (maximum == stoi(candidatedatabase[i][5]))
             {
                 cout << left << setw(16) << candidatedatabase[i][1];
