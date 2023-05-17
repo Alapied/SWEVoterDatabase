@@ -278,6 +278,7 @@ void menuOptionsVoter(int index) {
             break;
         case 'Q':
             cout << "Goodbye" << endl;
+            logevent("User Logged out");
             exit(0);
             break;
         default:
@@ -341,6 +342,7 @@ void menuoptionsadmin(int index){
             break;
         case 'Q':
             cout << "Goodbye" << endl;
+            logevent("User Logged out");
             exit(0);
             break;
         default:
