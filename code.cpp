@@ -31,7 +31,7 @@ void minVoteCandidate();
 void maxVoteCandidate();
 void displayAllCandidates();
 void addMultiVote(string);
-
+void logevent(string);
 
 int main(){
     readindata(); //Takes Records in a file and copies them to vector databases
@@ -54,7 +54,11 @@ int main(){
     }
     return 0;
 }
-
+void logevent(string Prompt){
+    fstream logfile("log.txt", ios::app);
+    logfile << Prompt << endl;
+    logfile.close();
+}
 void writedatabase() {
     cout << "Saving Changes" << endl;
     fstream file(canddir, ios::out | ios::trunc); //opens candidate file for output to override.
@@ -273,7 +277,7 @@ void menuOptionsVoter(int index) {
             }
             break;
         case 'Q':
-            cout << "Goodbye";
+            cout << "Goodbye" << endl;
             exit(0);
             break;
         default:
@@ -310,6 +314,8 @@ void menuoptionsadmin(int index){
             else
             {
                 castVote(index);
+                string log = "User voted";
+                logevent(log);
                 writedatabase();
             }
             break;
@@ -334,7 +340,7 @@ void menuoptionsadmin(int index){
             //writedatabase();
             break;
         case 'Q':
-            cout << "Goodbye";
+            cout << "Goodbye" << endl;
             exit(0);
             break;
         default:
@@ -363,6 +369,8 @@ int login(){
             getline(cin , PIN);
             if (voterdatabase[index][2] == PIN){
                 //compare the PIN in the database to entered pin
+                string log = "User " + IDstring + " logged in";
+                logevent(log);
                 loggedin = true;
                 break;
             } else {
@@ -541,6 +549,8 @@ void addMultiVote(string CandID){
     cin >> save;
     save = toupper(save);
     if (save == 'Y'){
+        string log = "User added " + to_string(count) + " votes to candidate " + CandID;
+        logevent(log);
         writedatabase();
     } else {
         cout << "Not saving" << endl;
