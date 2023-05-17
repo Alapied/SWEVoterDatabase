@@ -35,6 +35,12 @@ void addMultiVote(string);
 
 int main(){
     readindata(); //Takes Records in a file and copies them to vector databases
+    if (candidatedatabase.empty()){
+        cout << "Error:The candidate list is empty" << endl;
+    }
+    if (voterdatabase.empty()){
+        cout << "Error:The Voter database is empty" <<endl;
+    }
     int index = login(); //Calls login and returns the index of the voter that has logged in
     bool isAdmin = false;
     if (index == -1) {
@@ -253,16 +259,25 @@ void menuOptionsVoter(int index) {
             }
             break;
         case 'S':
-            minVoteCandidate();
+            if (candidatedatabase.empty()){
+                cout << "Unable to determine the smallest number - list is empty" << endl;
+            } else {
+                minVoteCandidate();
+            }
             break;
         case 'L':
-            maxVoteCandidate();
+            if (candidatedatabase.empty()){
+                cout << "Unable to determine the largest number - list is empty" << endl;
+            } else {
+                maxVoteCandidate();
+            }
             break;
         case 'Q':
+            cout << "Goodbye";
             exit(0);
             break;
         default:
-            cout << "Invalid Menu option" << endl;
+            cout << "Unknown selection, please try again" << endl;
             break;
         }
     }
@@ -299,10 +314,18 @@ void menuoptionsadmin(int index){
             }
             break;
         case 'S':
-            minVoteCandidate();
+            if (candidatedatabase.empty()){
+                cout << "Unable to determine the smallest number - list is empty" << endl;
+            } else {
+                minVoteCandidate();
+            }
             break;
         case 'L':
-            maxVoteCandidate();
+            if (candidatedatabase.empty()){
+                cout << "Unable to determine the largest number - list is empty" << endl;
+            } else {
+                maxVoteCandidate();
+            }
             break;
         case 'A':
             cout << "Please input the candidate id to add votes: ";
@@ -311,10 +334,11 @@ void menuoptionsadmin(int index){
             //writedatabase();
             break;
         case 'Q':
+            cout << "Goodbye";
             exit(0);
             break;
         default:
-            cout << "Invalid Menu option" << endl;
+            cout << "Unknown selection, please try again" << endl;
             break;
         }
     }
